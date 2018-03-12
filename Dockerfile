@@ -1,6 +1,6 @@
 FROM openjdk:8-jdk
 
-RUN apt-get update && apt-get install -y git curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y git curl vim sudo && rm -rf /var/lib/apt/lists/*
 
 ARG user=jenkins
 ARG group=jenkins
@@ -41,7 +41,7 @@ COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groov
 
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.60.3}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.89.4}
 
 # jenkins.war checksum, download will be validated using it
 ARG JENKINS_SHA=2d71b8f87c8417f9303a73d52901a59678ee6c0eefcf7325efed6035ff39372a

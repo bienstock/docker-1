@@ -63,10 +63,24 @@ EXPOSE ${agent_port}
 
 ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 
+USER root
+#Installing IBM Java
+COPY ibm-java.bin /tmp/ibm-java.bin
+RUN echo "INSTALLER_UI=silent" > /tmp/response.properties && \
+    echo "USER_INSTALL_DIR=/opt/ibm/java" >> /tmp/response.properties && \
+    echo "LICENSE_ACCEPTED=TRUE" >> /tmp/response.properties && \
+    mkdir -p /opt/ibm && \
+    chmod +x /tmp/ibm-java.bin && \
+    sleep 2 && \
+    /tmp/ibm-java.bin -i silent -f /tmp/response.properties && \
+    rm -f /tmp/response.properties && \
+    rm -f /tmp/index.yml && \
+rm -f /tmp/ibm-java.bin
+
 USER ${user}
 
 COPY jenkins-support /usr/local/bin/jenkins-support
-COPY jenkins.sh /usr/local/bin/jenkins.sh
+COPY jenkins-ibm.sh /usr/local/bin/jenkins.sh
 COPY tini-shim.sh /bin/tini
 ENTRYPOINT ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
